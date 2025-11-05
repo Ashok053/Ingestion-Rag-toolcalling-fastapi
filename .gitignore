@@ -1,0 +1,10 @@
+.venv
+myenv
+
+.idea
+
+*.log
+*.sqlite3
+*.db
+
+.env
