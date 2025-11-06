@@ -1,4 +1,3 @@
-#main fastapi app to connect all router and initialize database
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
@@ -33,7 +32,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None,None]:
 
 app = FastAPI()
 
-#document ingestion api
 app.include_router(doc_ingestion_router)
 app.include_router(chat_router)
 app.include_router(booking_router)
