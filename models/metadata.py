@@ -1,12 +1,9 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from datetime import datetime
-
-
 from core.database import Base
 
 class DocMetaData(Base):
-    """store documents metadata"""
     __tablename__= "documentsInfo"
 
     id = Column(Integer, primary_key=True, index = True)
@@ -17,11 +14,9 @@ class DocMetaData(Base):
     chunk_count = Column(Integer, nullable=False)
     chunking_strategy = Column(String, nullable = False)
     chunk_size = Column(Integer,nullable = False)
-
     chunks = relationship("ChunkMetadata",back_populates="document")
 
 class ChunkMetadata(Base):
-    """store individual chunk metadata"""
     __tablename__ = "chunks"
 
     id = Column(Integer, primary_key=True, index = True)
@@ -30,5 +25,4 @@ class ChunkMetadata(Base):
     chunk_index = Column(Integer,nullable=False)
     text = Column(Text, nullable = False)
     char_count = Column(Integer, nullable = False)
-
     document = relationship("DocMetaData",back_populates="chunks")

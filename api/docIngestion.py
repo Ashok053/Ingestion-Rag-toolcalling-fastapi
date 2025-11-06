@@ -3,14 +3,11 @@ from sqlalchemy.orm import Session
 
 import numpy as np
 
-# core imports
 from core.database import get_db
 from core.configuration import settings
 
-# schemas
 from schemas.ingestion_schema import IngestResponse, ChunkMetaData
 
-# services
 from services.documentService import DocumentService
 from services.chunking import chunk_text
 from services.embeddings import generate_embeddings
@@ -39,7 +36,6 @@ async def upload_documents(
         if not (file.filename.endswith('.pdf') or file.filename.endswith('.txt')):
             raise HTTPException(status_code=400, detail="invalid file type")
 
-        # validate strategy
         if strategy not in ['sentence', 'fixed']:
             raise HTTPException(status_code=400, detail="invalid chunking strategy")
 
@@ -73,7 +69,6 @@ async def upload_documents(
         embeddings: np.ndarray = generate_embeddings(chunks)
         print(f"generated embeddings of shape {embeddings.shape}")
 
-        # save metadata
         file_type = file.filename.split('.')[-1]
         try:
             doc_id = DocumentService.save_document_metadata(
@@ -87,7 +82,6 @@ async def upload_documents(
         except TypeError as e:
             raise HTTPException(status_code=500, detail=f"internal error: invalid metadata argument {str(e)}")
 
-        # save chunk metadata
         DocumentService.save_chunk_metadata(
             db=db,
             document_id=doc_id,
@@ -97,8 +91,6 @@ async def upload_documents(
         print(f"saved metadata for document {doc_id}")
         print(f"Type of embeddings: {type(embeddings)}, Type of one embedding: {type(embeddings[0])}")
 
-
-        # store embeddings in Qdrant - convert numpy array to list
         store_embeddings(
             chunks=chunks,
             embeddings=embeddings.tolist(),
@@ -108,7 +100,6 @@ async def upload_documents(
 
         print(f"document {doc_id} ingested successfully")
 
-        # Return the response
         chunk_metadata_list = [
             ChunkMetaData(
                 chunk_text=chunk['text'],

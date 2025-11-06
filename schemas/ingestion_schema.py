@@ -18,7 +18,6 @@ class IngestResponse(BaseModel):
 
     @property
     def chunks(self) -> int:
-        """Return the number of chunks"""
         return len(self.total_chunks)
 
     class Config:

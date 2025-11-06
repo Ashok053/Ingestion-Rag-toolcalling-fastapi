@@ -189,7 +189,7 @@ Bot: "Based on the documents, Python is a high-level programming language..."
 **Booking:**
 ```
 User: "Book interview for Ram, ram@example.com, 2025-11-15, 10:00"
-Bot: "✅ Interview booked! Name: Ram sharma, Email: ram@example.com..."
+Bot: "Interview booked! Name: Ram sharma, Email: ram@example.com..."
 ```
 
 **Multi-turn:**

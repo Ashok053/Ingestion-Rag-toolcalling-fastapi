@@ -11,8 +11,8 @@ class RedisManager:
             settings.REDIS_URL,
             decode_responses=True
         )
-        self.max_history = 20  # Keep last 20 chat messages
-        self.ttl = 3600   # Keep history for 1 hour (seconds)
+        self.max_history = 20
+        self.ttl = 3600
 
     def save_message(self, session_id: str, role: str, message: str):
         """
@@ -56,5 +56,4 @@ class RedisManager:
         key = f"chat:{session_id}"
         self.redis_client.delete(key)
 
-# Global instance
 redis_manager = RedisManager()

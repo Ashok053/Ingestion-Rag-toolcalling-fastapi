@@ -31,7 +31,7 @@ async def create_booking(
     - Booking confirmation with booking ID
     """
     try:
-        print(f"📅 New booking request:")
+        print(f"  New booking request:")
         print(f"   Name: {request.name}")
         print(f"   Email: {request.email}")
         print(f"   Date: {request.date}, Time: {request.time}")
@@ -40,15 +40,15 @@ async def create_booking(
         booking = Booking(
             name=request.name,
             email=request.email,
-            date=str(request.date),  # Convert date to string
-            time=str(request.time)  # Convert time to string
+            date=str(request.date),
+            time=str(request.time)
         )
 
         db.add(booking)
         db.commit()
         db.refresh(booking)
 
-        print(f"   ✓ Booking created with ID: {booking.id}")
+        print(f"Booking created with ID: {booking.id}")
 
         return BookingResponse(
             success=True,
@@ -71,12 +71,6 @@ async def create_booking(
 
 @router.get("/", response_model=BookingListResponse)
 async def list_all_bookings(db: Session = Depends(get_db)):
-    """
-    Get all interview bookings.
-
-    Returns:
-    - List of all bookings with details
-    """
     try:
         bookings = db.query(Booking).order_by(
             Booking.created_at.desc()

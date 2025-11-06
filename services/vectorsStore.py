@@ -6,14 +6,12 @@ import uuid
 
 
 def get_qdrant_client(host: str = None, port: int = None):
-    """Get Qdrant client (host/port can be provided or taken from settings)"""
     host = host or settings.QDRANT_HOST
     port = port or settings.QDRANT_PORT
     return QdrantClient(host=host, port=port)
 
 
 def ensure_collection(client: QdrantClient, collection_name: str, vector_size: int = 384):
-    """Create collection if it does not exist."""
     existing = [c.name for c in client.get_collections().collections]
     if collection_name not in existing:
         print(f"Creating Qdrant collection '{collection_name}' (size={vector_size})")
@@ -30,14 +28,13 @@ def init_qdrant_collection(
     qdrant_host: str = None,
     qdrant_port: int = None
 ):
-    """Initialize Qdrant collection"""
+
     client = get_qdrant_client(host=qdrant_host, port=qdrant_port)
     ensure_collection(client, collection_name, vector_size)
     return client
 
 
 def store_embeddings(chunks: List[Dict], embeddings: List, doc_id: str, collection_name: str = "documents"):
-    """Store embeddings in Qdrant with chunk metadata."""
     client = get_qdrant_client()
     ensure_collection(client, collection_name, vector_size=len(embeddings[0]))
 
@@ -60,7 +57,6 @@ def store_embeddings(chunks: List[Dict], embeddings: List, doc_id: str, collecti
 
 
 def search_similar_chunks(query_embedding, top_k: int = 5, collection_name: str = "documents") -> List[Dict]:
-    """Search for top-k similar chunks in Qdrant."""
     client = get_qdrant_client()
     results = client.search(collection_name=collection_name, query_vector=query_embedding.tolist(), limit=top_k)
 

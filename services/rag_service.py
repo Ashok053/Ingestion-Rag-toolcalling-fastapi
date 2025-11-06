@@ -4,11 +4,9 @@ from core.configuration import settings
 from typing import List, Dict, Tuple
 from services.llm_service import llm_service
 class CustomRAG:
-    """ RAG service using LLM without using Retrieval QA Chain """
 
     @staticmethod
     def retrieve_context(query: str, top_k: int = 3) -> Tuple[str, List[Dict]]:
-        """Retrieve related chunks"""
         query_chunks = [{'text': query}]
         query_embedding = generate_embeddings(query_chunks)[0]
 
@@ -30,7 +28,6 @@ class CustomRAG:
 
     @staticmethod
     def build_prompt(query: str, context: str, chat_history: str = "") -> str:
-        """Build prompt for LLM"""
         prompt = f"You are a helpful assistant answering questions based on provided documents.\nContext from documents:\n{context}\n"
 
         if chat_history:
@@ -48,7 +45,6 @@ class CustomRAG:
 
     @staticmethod
     def generate_answer(query: str, context: str, chat_history: str = "") -> str:
-        """Generate answer using LLM"""
         booking_keywords = ['book', 'interview', 'schedule', 'appointment']
 
         if any(keyword in query.lower() for keyword in booking_keywords):
@@ -73,7 +69,6 @@ class CustomRAG:
 
     @staticmethod
     def answer_query(query: str, chat_history: str = "") -> Tuple[str, List[str]]:
-        """Complete RAG pipeline"""
         context, results = CustomRAG.retrieve_context(query, top_k=3)
         answer = CustomRAG.generate_answer(query, context, chat_history)
         sources = [r['text'][:150] + "..." for r in results] if results else []

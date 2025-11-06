@@ -5,7 +5,6 @@ from datetime import date, time
 from typing import Optional
 
 class BookingRequest(BaseModel):
-    """Request schema for creating an interview bookings"""
     name: str = Field(..., min_length=2, max_length=100, description="Candidate's full name")
     email: EmailStr = Field(..., description="Candidate's email address")
     booking_date: date = Field(..., description="Preferred date for interview")
@@ -23,7 +22,6 @@ class BookingRequest(BaseModel):
 
 
 class BookingResponse(BaseModel):
-    """Response schema after creating a booking"""
     success: bool = Field(default=True, description="Booking status")
     booking_id: int = Field(..., ge=1, description="Booking ID")
     name: str
@@ -48,7 +46,6 @@ class BookingResponse(BaseModel):
 
 
 class BookingListItem(BaseModel):
-    """Schema for listing bookings."""
     id: int
     name: str
     email: str
@@ -61,6 +58,5 @@ class BookingListItem(BaseModel):
 
 
 class BookingListResponse(BaseModel):
-    """Response schema for listing all bookings."""
     total: int = Field(...,description="Total number of bookings")
     bookings: list[BookingListItem] = Field(...,description="List of all bookings")

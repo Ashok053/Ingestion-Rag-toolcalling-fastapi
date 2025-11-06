@@ -25,17 +25,15 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db)):
     session_id = request.session_id or str(uuid.uuid4())
 
     try:
-        # Retrieve last 5 messages
         chat_history = redis_manager.get_context(session_id, last_n=5)
 
-        # Process the query (RAG or Booking)
         answer, is_booking = ToolService.process_query(
             query=request.query,
             chat_history=chat_history,
             db=db
         )
 
-        # Save user and assistant messages
+
         redis_manager.save_message(session_id, "user", request.query)
         redis_manager.save_message(session_id, "assistant", answer)
 
@@ -53,7 +51,6 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db)):
 
 @router.get("/history/{session_id}")
 async def get_chat_history(session_id: str):
-    """Fetch conversation history for a session."""
     try:
         history = redis_manager.get_history(session_id)
         return {"session_id": session_id, "total_messages": len(history), "messages": history}
@@ -63,7 +60,6 @@ async def get_chat_history(session_id: str):
 
 @router.delete("/history/{session_id}")
 async def clear_chat_history(session_id: str):
-    """Clear conversation history for a session."""
     try:
         redis_manager.clear_session(session_id)
         return {"message": f"History cleared for session {session_id}"}

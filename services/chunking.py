@@ -2,9 +2,6 @@ from typing import List, Dict
 import re
 
 def chunk_by_sentence(text: str, chunk_size: int = 500, overlap: int = 50) -> List[Dict]:
-    """
-    Split text into chunks by sentences, preserving sentence boundaries.
-    """
     sentences = re.split(r'(?<=[.!?])\s+', text.strip())
     chunks = []
     current_chunk = ""
@@ -31,14 +28,10 @@ def chunk_by_sentence(text: str, chunk_size: int = 500, overlap: int = 50) -> Li
             "strategy": "sentence",
             "char_count": len(current_chunk.strip())
         })
-
     return chunks
 
 
 def chunk_by_fixed_size(text: str, chunk_size: int = 500, overlap: int = 100) -> List[Dict]:
-    """
-    Split text into fixed-size chunks with sliding window.
-    """
     text = text.strip()
     chunks = []
     start = 0
@@ -58,9 +51,6 @@ def chunk_by_fixed_size(text: str, chunk_size: int = 500, overlap: int = 100) ->
 
 
 def chunk_text(text: str, strategy: str = "sentence", chunk_size: int = 500, overlap: int = 100) -> List[Dict]:
-    """
-    Chunk text using the selected strategy.
-    """
     if not text or not text.strip():
         return []
 

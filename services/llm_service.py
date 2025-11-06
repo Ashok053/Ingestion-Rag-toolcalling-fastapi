@@ -1,9 +1,6 @@
 from core.configuration import settings
 
 class LLMService:
-    """
-    LLM service supporting currently Groq.
-    """
 
     def __init__(self):
         self.client = None
@@ -15,7 +12,6 @@ class LLMService:
             print("No Groq API key found in settings. LLM will not work.")
 
     def _init_groq(self):
-        """Initialize Groq client with API key."""
         try:
             from groq import Groq
             self.client = Groq(api_key=settings.GROQ_API_KEY)
@@ -26,15 +22,7 @@ class LLMService:
             self.client = None
 
     def generate(self, prompt: str, max_tokens: int = 500, temperature: float = 0.5) -> str:
-        """
-        Generate a response from the LLM.
-        Args:
-            prompt: User input or context.
-            max_tokens: Max tokens for output.
-            temperature: Creativity level.
-        Returns:
-            Generated text from LLM.
-        """
+
         if not self.client:
             raise RuntimeError("LLM client is not initialized.")
 

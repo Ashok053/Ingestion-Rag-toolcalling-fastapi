@@ -8,7 +8,6 @@ SessionLocal = sessionmaker(autocommit = False, autoflush= False, bind = engine)
 Base = declarative_base()
 
 def get_db():
-    """dependency for fastapi to get database session"""
     db = SessionLocal()
     try:
         yield db
@@ -16,7 +15,6 @@ def get_db():
         db.close()
 
 def init_db():
-    """Create all tables """
     Base.metadata.create_all(bind=engine)
     print("database table created")
 

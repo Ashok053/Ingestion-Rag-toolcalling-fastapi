@@ -2,10 +2,8 @@ from sqlalchemy.orm import Session
 from models.booking import Booking
 
 class BookingService:
-    """handle interview booking logic"""
     @staticmethod
     def create_booking(db :Session,name:str, email:str, date:str, time:str) -> Booking:
-        """create a new interview booking"""
         booking = Booking(
             name = name,
             email = email,
@@ -21,7 +19,6 @@ class BookingService:
 
     @staticmethod
     def get_all_bookings(db:Session):
-        """get all bookings"""
         return db.query(Booking).order_by(Booking.created_at.desc()).all()
 
     @staticmethod

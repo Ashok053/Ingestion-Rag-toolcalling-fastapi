@@ -5,13 +5,10 @@ from services.rag_service import CustomRAG
 from sqlalchemy.orm import Session
 
 class ToolService:
-    """Service to detect intent, handle bookings or answer questions."""
 
     @staticmethod
     def detect_intent(query: str) -> Dict:
-        """Detect if user wants to book or ask a question using LLM"""
         prompt = f"""
-        
         Analyze this message and return ONLY JSON:
         {{
         "intent": "book_interview" or "ask_question",
@@ -32,7 +29,6 @@ class ToolService:
 
     @staticmethod
     def extract_booking_info(query: str, intent_data: Dict) -> Optional[Dict]:
-        """Return booking info if complete, else None"""
         if all(intent_data.get(k) for k in ["name", "email", "date", "time"]):
             return {k: intent_data[k] for k in ["name", "email", "date", "time"]}
 
@@ -50,11 +46,9 @@ class ToolService:
 
     @staticmethod
     def create_booking(booking_info: Dict, db: Session) -> Tuple[bool, str]:
-        """Save booking in DB and return success message"""
         from models.booking import Booking
         from datetime import datetime
 
-        # Map input keys to match DB model
         booking_data = {
             "name": booking_info["name"],
             "email": booking_info["email"],
@@ -62,7 +56,6 @@ class ToolService:
             "booking_time": booking_info["time"]  # map 'time' -> 'booking_time'
         }
 
-        # Validate date/time
         try:
             datetime.strptime(str(booking_data["booking_date"]), "%Y-%m-%d")
         except:
@@ -93,13 +86,12 @@ class ToolService:
 
     @staticmethod
     def process_query(query: str, chat_history: str, db: Session) -> Tuple[str, bool]:
-        """Main entry: handle query"""
+
         intent_data = ToolService.detect_intent(query)
 
         if intent_data["intent"] == "book_interview":
             booking_info = ToolService.extract_booking_info(query, intent_data)
             if booking_info:
-                # Fix: unpack correctly
                 success, msg = ToolService.create_booking(booking_info, db)
                 return msg, success  #  msg is string, success is bool
             else:
@@ -107,7 +99,6 @@ class ToolService:
                 msg = "Provide the following info to book interview:\n" + "\n".join(f"• {m}" for m in missing)
                 return msg, False
         else:
-            # Make sure answer is always string
             answer, _ = CustomRAG.answer_query(query, chat_history)
             if not isinstance(answer, str):
                 answer = str(answer)
